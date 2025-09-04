@@ -112,13 +112,21 @@ class BSCalendar {
 
 struct BSCalendarView: View {
     let bsDate: BSDate
+    let nepaliWeekdays = ["आइत","सोम","मङ्गल","बुध","बिही","शुक्र","शनि"]
     
     var body: some View {
         VStack {
-           
-            
             // Days grid (example: 30 days)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7)) {
+                
+                // Weekday headers
+                ForEach(nepaliWeekdays, id: \.self) { day in
+                    Text(day)
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .frame(width: 40, height: 40)
+                }
+                
                 ForEach(1...32, id: \.self) { day in
                     if day <= 30 { // Simplified example
                         Text(BSCalendar.toNepaliDigits(day))
