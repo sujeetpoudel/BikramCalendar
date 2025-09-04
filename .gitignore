@@ -1,0 +1,10 @@
+# Xcode user settings
+xcuserdata/
+*.xcuserstate
+
+# Build products
+build/
+DerivedData/
+
+# Other
+*.xcscmblueprint
