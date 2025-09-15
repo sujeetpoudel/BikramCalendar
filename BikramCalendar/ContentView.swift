@@ -8,7 +8,50 @@
 import SwiftUI
 import PopupView
 
+
+import SwiftUI
+
 struct ContentView: View {
+    var body: some View {
+        TabView {
+            ClockTabContentView()
+                .tabItem {
+                    Label("Clock", systemImage: "clock.fill")
+                }
+            
+            CalendarTabContentView()
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+            
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+        }
+    }
+}
+
+struct ClockTabContentView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+        NepaliAnalogClock()
+            .frame(width: 220, height: 220)
+            .padding(.bottom, 40)
+            NepaliDigitalClock()
+        }
+        .padding()
+    }
+}
+
+struct SettingsView: View {
+    var body: some View {
+        Text("⚙️ Settings Screen")
+            .font(.largeTitle)
+    }
+}
+
+struct CalendarTabContentView: View {
 
     @State private var bsDate: BSDate = BSDate(year: 2000, month: 1, day: 1, weekday: 3, monthStartWeekday: 3, monthLength: 30) {
         didSet {

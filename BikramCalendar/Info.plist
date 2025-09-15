@@ -2,62 +2,47 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>BikramCalendar</string>
-    
-    <key>CFBundleDisplayName</key>
-    <string>Bikram Calendar</string>
-    
-    <key>CFBundleIdentifier</key>
-    <string>com.bikramcalendar.com.BikramCalendar</string>
-    
-    <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
-    
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    
-    <key>UIDeviceFamily</key>
-    <array>
-        <integer>1</integer> <!-- iPhone -->
-        <integer>2</integer> <!-- iPad -->
-    </array>
-    
-    <key>CFBundleIcons</key>
-    <dict>
-        <key>CFBundlePrimaryIcon</key>
-        <dict>
-            <key>CFBundleIconName</key>
-            <string>AppIcon</string>
-        </dict>
-    </dict>
-    
-    <!-- Supported orientations -->
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-    </array>
-    
-    <key>UISupportedInterfaceOrientations~ipad</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationPortraitUpsideDown</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    
-    <!-- Launch screen -->
-    <key>UILaunchStoryboardName</key>
-    <string>Launch Screen</string>
-    
-    <!-- Force full screen on iPad (disables multitasking if true) -->
-    <key>UIRequiresFullScreen</key>
-    <true/>
+	<key>CFBundleName</key>
+	<string>BikramCalendar</string>
+	<key>CFBundleDisplayName</key>
+	<string>Bikram Calendar</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.bikramcalendar.com.BikramCalendar</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.2</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconName</key>
+			<string>AppIcon</string>
+		</dict>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>Launch Screen</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 </dict>
 </plist>
