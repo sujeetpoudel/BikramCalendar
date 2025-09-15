@@ -14,9 +14,22 @@
 		820CB1AE2E6602ED0095101A /* BikramCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikramCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		82F683E12E78908600179B98 /* Exceptions for "BikramCalendar" folder in "BikramCalendar" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 820CB1AD2E6602ED0095101A /* BikramCalendar */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		820CB1B02E6602ED0095101A /* BikramCalendar */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				82F683E12E78908600179B98 /* Exceptions for "BikramCalendar" folder in "BikramCalendar" target */,
+			);
 			path = BikramCalendar;
 			sourceTree = "<group>";
 		};
@@ -268,8 +281,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BikramCalendar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2MU739PX6K;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BikramCalendar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Calendar";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -298,8 +313,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BikramCalendar/Preview Content\"";
 				DEVELOPMENT_TEAM = 2MU739PX6K;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BikramCalendar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Calendar";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
