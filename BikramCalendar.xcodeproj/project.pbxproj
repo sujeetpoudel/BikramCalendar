@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		82F683C32E75F84600179B98 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 82F683C22E75F84600179B98 /* PopupView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		820CB1AE2E6602ED0095101A /* BikramCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikramCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82F683C32E75F84600179B98 /* PopupView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				820CB1B02E6602ED0095101A /* BikramCalendar */,
+				82F683C12E75F84600179B98 /* Frameworks */,
 				820CB1AF2E6602ED0095101A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +49,13 @@
 				820CB1AE2E6602ED0095101A /* BikramCalendar.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		82F683C12E75F84600179B98 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +78,7 @@
 			);
 			name = BikramCalendar;
 			packageProductDependencies = (
+				82F683C22E75F84600179B98 /* PopupView */,
 			);
 			productName = BikramCalendar;
 			productReference = 820CB1AE2E6602ED0095101A /* BikramCalendar.app */;
@@ -326,6 +340,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		82F683C22E75F84600179B98 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PopupView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 820CB1A62E6602ED0095101A /* Project object */;
 }
