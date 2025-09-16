@@ -23,7 +23,7 @@ struct BSDatePicker: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack {
-                CustomADDatePickerView(bsDate: $tempBSDate)
+                CustomDatePickerView(bsDate: $tempBSDate)
                 
                 Button {
                     bsDate = BSCalendar.toFullBS(from: tempBSDate)
@@ -31,7 +31,7 @@ struct BSDatePicker: View {
                     UserSelectedDate.date = bsDate.withChangedDay(bsDate.day)
                     dismiss?()
                 } label: {
-                    Text("छान्नुहोस्: \(tempBSDate.year.nepaliStr)-\(tempBSDate.month.nepaliStr)-\(tempBSDate.day.nepaliStr)")
+                    Text("छनोट गर्नुहोस्: \(tempBSDate.year.nepaliStr)-\(tempBSDate.month.nepaliStr)-\(tempBSDate.day.nepaliStr)")
                         .padding()
                         .background(Constant.gentleRed)
                         .foregroundColor(Constant.gentleBlack)
@@ -57,53 +57,114 @@ struct BSDatePicker: View {
     }
 }
 
-struct CustomADDatePickerView: View {
-    @Binding var bsDate: BSDate {
-        didSet {
-            print("Selected Date: \(bsDate)")
-        }
-    }
-    
-    var daysInSelectedMonth: Int {
-        npMonthsData[bsDate.year - 2000][bsDate.month - 1] // Month index starts at 0
-    }
+struct CustomDatePickerView: View {
+    @Binding var bsDate: BSDate
+    @State private var showAD: Bool = false // Toggle between BS and AD
 
-    var years: [Int] = Array(2000...2099)
-    private let months: [String] = [
+    private let npMonths = [
         "बैशाख", "जेठ", "असार", "साउन", "भदौ", "असोज",
         "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुन", "चैत"
     ]
 
+    private let years = Array(2000...2099)
+
+    var daysInSelectedMonth: Int {
+        npMonthsData[bsDate.year - 2000][bsDate.month - 1] // month index 0
+    }
+    
+    var adDateInKathmandu: Date {
+        let adDate = BSCalendar.toAD(from: bsDate)
+        let tz = TimeZone(identifier: "Asia/Kathmandu")!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = tz
+        var comps = calendar.dateComponents([.year, .month, .day], from: adDate)
+        comps.day! += 1 // need to understand better utc and ktm time
+        return calendar.date(from: comps) ?? adDate
+    }
+
     var body: some View {
-        HStack(spacing: 0) {
-            // Year picker
-            Picker("Year", selection: $bsDate.year) {
-                ForEach(years, id: \.self) { y in
-                    Text("\(y.nepaliStr)").tag(y)
-                }
+        VStack {
+            // Toggle for BS / AD
+            Toggle(isOn: $showAD) {
+                Text(showAD ? "ई.सं." : "बि.सं.")
             }
+            .foregroundStyle(Constant.gentleBlack)
             .frame(width: 100)
-            .clipped()
+            .toggleStyle(SwitchToggleStyle(tint: Color.blue.opacity(0.5)))
 
-            // Month picker
-            Picker("Month", selection: $bsDate.month) {
-                ForEach(1...12, id: \.self) { m in
-                    Text(months[m - 1]).tag(m)
+            if showAD {
+                ADDatePicker(adDate: adDateInKathmandu) { newADDate in
+                    bsDate = BSCalendar.toBS(from: newADDate)
                 }
-            }
-            .frame(width: 120)
-            .clipped()
+            } else {
+                // BS Picker
+                HStack(spacing: 0) {
+                    // Year picker
+                    Picker("Year", selection: $bsDate.year) {
+                        ForEach(years, id: \.self) { y in
+                            Text("\(y.nepaliStr)").tag(y)
+                        }
+                    }
+                    .frame(width: 100)
+                    .clipped()
 
-            // Day picker
-            Picker("Day", selection: $bsDate.day) {
-                ForEach(Array(1...daysInSelectedMonth), id: \.self) { d in
-                    Text("\(d.nepaliStr)").tag(d)
+                    // Month picker
+                    Picker("Month", selection: $bsDate.month) {
+                        ForEach(1...12, id: \.self) { m in
+                            Text(npMonths[m - 1]).tag(m)
+                        }
+                    }
+                    .frame(width: 120)
+                    .clipped()
+
+                    // Day picker
+                    Picker("Day", selection: $bsDate.day) {
+                        ForEach(1...daysInSelectedMonth, id: \.self) { d in
+                            Text("\(d.nepaliStr)").tag(d)
+                        }
+                    }
+                    .frame(width: 60)
+                    .clipped()
                 }
+                .pickerStyle(WheelPickerStyle())
             }
-            .frame(width: 60)
-            .clipped()
         }
-        .pickerStyle(WheelPickerStyle()) // makes them spin like locker
+    }
+}
+
+struct ADDatePicker: View {
+    @State var adDate: Date
+    var onChange: (Date) -> Void
+
+    private let tz = TimeZone(identifier: "Asia/Kathmandu")!
+    private var calendar: Calendar {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = tz
+        return cal
+    }
+
+    var body: some View {
+        DatePicker(
+            "",
+            selection: Binding<Date>(
+                get: {
+                    // Build a new Date from year, month, day only
+                    let comps = calendar.dateComponents([.year, .month, .day], from: adDate)
+                    return calendar.date(from: comps) ?? adDate
+                },
+                set: { newDate in
+                    // Construct Date from picked year/month/day
+                    let comps = calendar.dateComponents([.year, .month, .day], from: newDate)
+                    if let localDate = calendar.date(from: comps) {
+                        adDate = localDate
+                        onChange(localDate)
+                    }
+                }
+            ),
+            displayedComponents: [.date]
+        )
+        .datePickerStyle(WheelDatePickerStyle())
+        .labelsHidden()
     }
 }
 

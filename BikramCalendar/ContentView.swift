@@ -12,22 +12,27 @@ import PopupView
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedTab = 1 // Index or tag of the tab you want to show first
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             ClockTabContentView()
                 .tabItem {
                     Label("Clock", systemImage: "clock.fill")
                 }
+                .tag(0)
             
             CalendarTabContentView()
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }
+                .tag(1)
             
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
+                .tag(2)
         }
     }
 }
@@ -73,15 +78,15 @@ struct CalendarTabContentView: View {
     @State private var showDatePickerPopup: Bool = false
     
     init() {
-        Today.date = BSCalendar.toBS(from: Date())
+        Today.date = BSCalendar.toBS(from: Today.ADDate)
     }
     
     var body: some View {
         VStack {
             NepaliDigitalClock()
                 .frame(width: 300, height: 100)
-                .padding(.top, 50)
-                .padding(.bottom, 50)
+                .padding(.top, 40)
+                .padding(.bottom, 25)
             
             if (userSelectedDay != nil) {
                 BSCalendarHeaderView(

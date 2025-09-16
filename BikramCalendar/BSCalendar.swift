@@ -25,7 +25,10 @@ struct Today {
         let tz = TimeZone(identifier: "Asia/Kathmandu")!
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = tz
-        return Date() // AD date in current time zone
+        // Get current date in Kathmandu timezone
+        let now = Date()
+        let components = calendar.dateComponents(in: tz, from: now)
+        return calendar.date(from: components) ?? now
     }
 }
 
@@ -130,7 +133,7 @@ class BSCalendar {
                     let day = diff + 1
                     let monthFirstWeekDay = (daysSinceEpoch + 3 - diff) % 7
                     let weekday = (monthFirstWeekDay + day - 1) % 7
-                    print(nepaliWeekdays[monthFirstWeekDay])
+                    print(nepaliWeekdays[monthFirstWeekDay], monthFirstWeekDay, weekday)
                     let date = BSDate(year: bsYear, month: monthIndex + 1, day: day, weekday: weekday, monthStartWeekday: monthFirstWeekDay, monthLength: daysInCurrentMonth)
                     return date
                 } else {
@@ -174,7 +177,7 @@ class BSCalendar {
 }
 
 #Preview {
-    ContentView()
+    CalendarTabContentView()
 }
 
 extension BSCalendar {

@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>BikramCalendar</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bikram Calendar</string>
+	<string>Bikram Sambat</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.bikramcalendar.com.BikramCalendar</string>
 	<key>CFBundleShortVersionString</key>

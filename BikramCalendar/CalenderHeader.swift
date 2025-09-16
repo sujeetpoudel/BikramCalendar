@@ -49,7 +49,7 @@ struct BSCalendarHeaderView: View {
                     .cornerRadius(10)
                     .foregroundStyle(Constant.gentleBlack)
             }
-            
+            .padding(.trailing, 5)
             // Previous month
             Button {
                 changeMonth(-1, bsDate)
@@ -61,7 +61,7 @@ struct BSCalendarHeaderView: View {
                     .background(Constant.gentleGray)
                     .cornerRadius(10)
             }
-            .padding(.trailing, 20)
+            .padding(.trailing, 1)
             
             // Next month
             Button {
@@ -104,5 +104,5 @@ let nepaliWeekdays = [
 func toBSString(bs: BSDate) -> String {
     let day = bs.day
     let wd = (bs.monthStartWeekday + day - 1) % 7
-    return "\(day.nepaliStr) \(bsMonths[bs.month-1])\n \(bs.year.nepaliStr) \(nepaliWeekdays[wd])"
+    return "\(day.nepaliStr) \(bsMonths[bs.month-1])\n\(bs.year.nepaliStr) \(nepaliWeekdays[wd])"
 }
