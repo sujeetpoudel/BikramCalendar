@@ -283,7 +283,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BikramCalendar/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Calendar";
+				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Sambat";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -315,7 +315,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BikramCalendar/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Calendar";
+				INFOPLIST_KEY_CFBundleDisplayName = "Bikram Sambat";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
