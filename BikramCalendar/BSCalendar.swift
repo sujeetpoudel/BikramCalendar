@@ -42,9 +42,9 @@ class BSCalendar {
         var components = DateComponents()
         components.year = 1943
         components.month = 4
-        components.day = 14
-        components.hour = 0
-        components.minute = 0
+        components.day = 13
+        components.hour = 23
+        components.minute = 45 // leap year delay 'may be'
         components.second = 0
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Asia/Kathmandu")! // Nepal Time

@@ -18,14 +18,28 @@ struct BSCalendarView: View {
     let bsDate: BSDate
     let nepaliWeekdaysAbbr = ["आइत","सोम","मङ्गल","बुध","बिही","शुक्र","शनि"]
     
-    @State var changeSelectedDayForOverflow: Bool = false
+    private var extendedRows: Bool {
+        bsDate.monthLength + bsDate.monthStartWeekday > 35
+    }
     
     /// All holidays in the given month
     var holidaysInMonth: [(day: Int, name: String)] {
         (1...bsDate.monthLength).compactMap { day -> (Int, String)? in
             let date = bsDate.withChangedDay(day)
-            if let holiday = date.holiday, holiday != .saturday {
+            if let holiday = date.holiday, holiday != .saturday, holiday != .holidayMention {
                 return (day, holiday.rawValue)
+            }
+            return nil
+        }
+    }
+    
+    /// All holidays in the given month
+    var eventsInMonth: [(day: Int, name: String)] {
+        (1...bsDate.monthLength).compactMap { day -> (Int, String)? in
+            let date = bsDate.withChangedDay(day)
+            if let event = date.event {
+                print(day, event.rawValue)
+                return (day, event.rawValue)
             }
             return nil
         }
@@ -41,12 +55,13 @@ struct BSCalendarView: View {
                     Text(day)
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .frame(width: 50, height: 30)
+                        .frame(width: 50, height: 20)
                 }
                 
-                let extendedRow = bsDate.monthLength + bsDate.monthStartWeekday > 35 ? 42 : 35
+                let extendedRows = bsDate.monthLength + bsDate.monthStartWeekday > 35 ? 42 : 35
+                
                 // Days
-                ForEach(1...extendedRow, id: \.self) { gridVal in
+                ForEach(1...extendedRows, id: \.self) { gridVal in
                     let dayNumber = gridVal - bsDate.monthStartWeekday
                     
                     if dayNumber >= 1 && dayNumber <= bsDate.monthLength {
@@ -61,18 +76,18 @@ struct BSCalendarView: View {
                                     .background(
                                         ZStack {
                                             let hasTodayHighlight: Bool = bsDate.month == Today.date.month && bsDate.year == Today.date.year
-                                            
                                             if hasTodayHighlight && dayNumber == Today.date.day {
                                                 Circle()
                                                     .fill(Color.blue.opacity(0.3))
                                             } else if dayNumber == userSelectedDay ||
                                                         (!hasTodayHighlight && userSelectedDay == nil && dayNumber == Today.date.day) {
-                                                Circle()
-                                                    .stroke(.black.opacity(0.5), lineWidth: 2)
+                                                Rectangle()
+                                                    .stroke(.gray.opacity(0.4), lineWidth: 4)
+                                                    .cornerRadius(4)
                                             }
                                         }
                                     )
-                                    .foregroundColor(bsDate.withChangedDay(dayNumber).isHoliday ? .red : .black)
+                                    .foregroundColor(bsDate.withChangedDay(dayNumber).isHoliday ? .red : .primary)
                                 
                                 // Corner AD date
                                 Text(ADDateCornerText(dayNumber: dayNumber))
@@ -92,96 +107,38 @@ struct BSCalendarView: View {
             }
             
             // Holidays list at the bottom
-            if !holidaysInMonth.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("इभेन्ट्सहरू:")
+            if !holidaysInMonth.isEmpty || !eventsInMonth.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("📅 इभेन्ट्सहरू:")
                         .font(.headline)
+                        .padding(.bottom, 5)
                     
-                    ForEach(holidaysInMonth, id: \.day) { holiday in
-                        Text("📅 \(BSCalendar.toNepaliDigits(holiday.day)) – \(holiday.name)")
-                            .foregroundColor(.red)
+                    // Define two columns
+                    let columns = [
+                        GridItem(.flexible(), spacing: 20),
+                        GridItem(.flexible(), spacing: 20)
+                    ]
+                    
+                    // Combine holidays + events into one array with a flag
+                    let combinedItems: [(day: Int, name: String, isHoliday: Bool)] =
+                        holidaysInMonth.prefix(6).map { (day: $0.day, name: $0.name, isHoliday: true) } +
+                        eventsInMonth.prefix(6).map { (day: $0.day, name: $0.name, isHoliday: false) }
+
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                        ForEach(combinedItems, id: \.day) { item in
+                            Text("\(BSCalendar.toNepaliDigits(item.day)) – \(item.name)")
+                                .foregroundColor(item.isHoliday ? .red : .primary.opacity(0.7))
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)
-                .padding(.leading, 50)
-                .padding(.top, 15)
+                .padding(.top, extendedRows ? 10: 15)
             }
             
         }
     }
 }
-extension BSDate {
-    enum Holiday: String {
-        case saturday = "शनिबार"
-        case newYear = "नयाँ बर्ष"
-        case magheSankranti = "माघे सङ्क्रान्ति"
-        case ganatantraDiwas = "गणतन्त्र दिवस"
-        case prajatantraDiwas = "प्रजातन्त्र दिवस"
-        case sahidDiwas = "शहीद दिवस"
-        case christmasDay = "क्रिसमस डे"
-        case engNewYear = "अंग्रेजी नयाँ बर्ष"
-        case bhaitika = "भाइटीका"
-        case dashain = "विजया दशमी"
-    }
-    
-    var holiday: Holiday? {
-        if self.isChristmasDay {
-            return .christmasDay
-        }
-        if self.isEnglishNewYear {
-            return .engNewYear
-        }
-        if day == 7 && month == 11 {
-            return .prajatantraDiwas
-        }
-        if day == 16 && month == 10 {
-            return .sahidDiwas
-        }
-        if day == 1 && month == 10 {
-            return .magheSankranti
-        }
-        if day == 1 && month == 1 {
-            return .newYear
-        }
-        if day == 15 && month == 2 && year > 2065 {
-            return .ganatantraDiwas
-        }
-        if day == 6 && month == 7 && year == 2082 {
-            return .bhaitika
-        }
-        if day == 16 && month == 6 && year == 2082 {
-            return .dashain
-        }
-        if (day + monthStartWeekday) % 7 == 0 {
-            return .saturday
-        }
-        return nil
-    }
-
-    // Check if the BSDate corresponds to Dec 25 (Christmas) in Kathmandu time
-    var isChristmasDay: Bool {
-        let date: Date = BSCalendar.toAD(from: self)
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "Asia/Kathmandu")!
-        let components = calendar.dateComponents([.month, .day], from: date)
-        return components.month == 12 && components.day == 25
-    }
-    
-    // Check if the BSDate corresponds to Jan 1 (English New Year) in Kathmandu time
-    var isEnglishNewYear: Bool {
-        let date: Date = BSCalendar.toAD(from: self)
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "Asia/Kathmandu")!
-        let components = calendar.dateComponents([.month, .day], from: date)
-        return components.month == 1 && components.day == 1
-    }
-
-    var isHoliday: Bool {
-        holiday != nil
-    }
-}
-
 
 #Preview {
     BSCalendarView(userSelectedDay: .constant(8), bsDate: BSDate(year: 2082, month: 6, day: 16, weekday: 1, monthStartWeekday: 3, monthLength: 31))

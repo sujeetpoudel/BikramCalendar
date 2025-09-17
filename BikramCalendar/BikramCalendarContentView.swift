@@ -18,43 +18,25 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             ClockTabContentView()
                 .tabItem {
-                    Label("Clock", systemImage: "clock.fill")
+                    Label("आज", systemImage: "clock.fill") // Clock → आज
                 }
                 .tag(0)
             
             CalendarTabContentView()
                 .tabItem {
-                    Label("Calendar", systemImage: "calendar")
+                    Label("पात्रो", systemImage: "calendar") // Calendar → पात्रो
                 }
                 .tag(1)
             
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape.fill")
+                    Label("सेटिङ्स", systemImage: "gearshape.fill") // Settings → सेटिङ्स
                 }
                 .tag(2)
         }
     }
 }
 
-struct ClockTabContentView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-        NepaliAnalogClock()
-            .frame(width: 220, height: 220)
-            .padding(.bottom, 40)
-            NepaliDigitalClock()
-        }
-        .padding()
-    }
-}
-
-struct SettingsView: View {
-    var body: some View {
-        Text("⚙️ Settings Screen")
-            .font(.largeTitle)
-    }
-}
 
 struct CalendarTabContentView: View {
 
@@ -84,9 +66,15 @@ struct CalendarTabContentView: View {
     var body: some View {
         VStack {
             NepaliDigitalClock()
-                .frame(width: 300, height: 100)
-                .padding(.top, 40)
-                .padding(.bottom, 25)
+                .frame(width: 150, height: 80)
+            
+                .overlay {
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(.secondary.opacity(0.3), lineWidth: 1)
+                    
+                }
+                .padding(.top)
+                .padding(.bottom)
             
             if (userSelectedDay != nil) {
                 BSCalendarHeaderView(
@@ -286,11 +274,10 @@ fileprivate func nepaliAMPM(_ hour: Int) -> String {
 struct NepaliDigitalClock: View {
     @State private var now = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    // Nepal timezone
-    private let tz = TimeZone(identifier: "Asia/Kathmandu") ?? TimeZone.current
+    private let tz = TimeZone(identifier: "Asia/Kathmandu") ?? .current
     private let calendar: Calendar = {
         var cal = Calendar(identifier: .gregorian)
-        cal.locale = Locale(identifier: "ne_NP") // optional for formatting
+        cal.locale = Locale(identifier: "ne_NP")
         return cal
     }()
 
@@ -299,50 +286,72 @@ struct NepaliDigitalClock: View {
         let hour24 = components.hour ?? 0
         let minute = components.minute ?? 0
         let second = components.second ?? 0
-
-        // 12-hour display
         let hour12 = (hour24 % 12 == 0) ? 12 : hour24 % 12
 
-        VStack(spacing: 8) {
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
+        VStack(spacing: 3) {
+            HStack(alignment: .center, spacing: 0) {
+                // Hours
                 Text(toNepaliDigits(hour12, minDigits: 2))
-                    .font(.system(size: 44, weight: .bold, design: .rounded))
-                    .frame(width: 60, alignment: .trailing)
+                    .font(.system(size: 32, weight: .semibold, design: .rounded))
 
+                // Colon
                 Text(":")
-                    .font(.system(size: 44, weight: .bold))
+                    .font(.system(size: 28, weight: .medium))
+                    .frame(width: 10, alignment: .center)
 
+                // Minutes
                 Text(toNepaliDigits(minute, minDigits: 2))
-                    .font(.system(size: 44, weight: .bold, design: .rounded))
-                    .frame(width: 60, alignment: .trailing)
-
-                Text(":")
-                    .font(.system(size: 28, weight: .semibold))
-
-                Text(toNepaliDigits(second, minDigits: 2))
-                    .font(.system(size: 28, weight: .medium, design: .rounded))
+                    .font(.system(size: 32, weight: .semibold, design: .rounded))
                     .frame(width: 40, alignment: .trailing)
+
+                // Colon
+                Text(":")
+                    .font(.system(size: 22, weight: .regular))
+                    .frame(width: 10, alignment: .center)
+
+                // Seconds
+                Text(toNepaliDigits(second, minDigits: 2))
+                    .font(.system(size: 22, weight: .regular, design: .rounded))
+                    .frame(width: 30, alignment: .leading)
+                    .foregroundStyle(.secondary)
+
             }
-            
 
-            // AM/PM and timezone label
-            HStack(spacing: 10) {
+            HStack(alignment: .center, spacing: 8) {
                 Text(nepaliAMPM(hour24))
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-
-                Text("नेपाल") // or "NPT" if you prefer
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .padding(3)
+                    .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(.secondary.opacity(0.3), lineWidth: 1)
+                        )
+                Text("नेपाल")
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }
         }
-        .onReceive(timer) { input in
-            self.now = input
+        .onReceive(timer) { now = $0 }
+        .padding(8)
+    }
+}
+
+
+struct ClockTabContentView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+        NepaliAnalogClock()
+            .frame(width: 220, height: 220)
+            .padding(.bottom, 40)
+        NepaliDigitalClock()
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white).shadow(radius: 2))
+    }
+}
+
+struct SettingsView: View {
+    var body: some View {
+        Text("⚙️ Settings Screen")
+            .font(.largeTitle)
     }
 }

@@ -20,7 +20,7 @@ struct BSCalendarHeaderView: View {
                 .font(.headline.bold())
                 .multilineTextAlignment(.center)
                 .frame(width: 120)
-                .foregroundColor(.red)
+                .foregroundColor(bsDate.isHoliday ? .red : .primary)
             
             // .font(.system(size: 44, weight: .bold, design: .rounded))
             // Show date picker
@@ -29,9 +29,9 @@ struct BSCalendarHeaderView: View {
             } label: {
                 Image(systemName: "chevron.down")
                     .font(.subheadline)
-                    .foregroundStyle(Constant.gentleBlack)
+                    .foregroundColor(.primary)
                     .padding(14)
-                    .background(Constant.gentleRed)
+                    .background(Color(.systemGray6))
                     .cornerRadius(20)
             }
             .padding(.trailing, 0)
@@ -45,9 +45,9 @@ struct BSCalendarHeaderView: View {
                 Text("आज")
                     .font(.caption.bold())
                     .padding(11)
-                    .background(Constant.gentleGray)
+                    .background(Color(.systemGray6))
                     .cornerRadius(10)
-                    .foregroundStyle(Constant.gentleBlack)
+                    .foregroundColor(.primary)
             }
             .padding(.trailing, 5)
             // Previous month
@@ -56,9 +56,9 @@ struct BSCalendarHeaderView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.subheadline)
-                    .foregroundStyle(Constant.gentleBlack)
+                    .foregroundColor(.primary)
                     .padding(11)
-                    .background(Constant.gentleGray)
+                    .background(Color(.systemGray6))
                     .cornerRadius(10)
             }
             .padding(.trailing, 1)
@@ -69,13 +69,14 @@ struct BSCalendarHeaderView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.subheadline)
-                    .foregroundStyle(Constant.gentleBlack)
+                    .foregroundColor(.primary)
                     .padding(11)
-                    .background(Constant.gentleGray)
+                    .background(Color(.systemGray6))
                     .cornerRadius(10)
             }
         }
         .padding(.horizontal)
+        .frame(height: 45)
     }
 }
 

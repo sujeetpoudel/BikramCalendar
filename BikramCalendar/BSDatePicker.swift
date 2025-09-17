@@ -129,6 +129,7 @@ struct CustomDatePickerView: View {
                 .pickerStyle(WheelPickerStyle())
             }
         }
+        .animation(.easeInOut, value: showAD)
     }
 }
 
