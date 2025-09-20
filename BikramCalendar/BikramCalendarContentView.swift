@@ -37,6 +37,52 @@ struct ContentView: View {
     }
 }
 
+struct AajaView: View {
+    
+    
+    var body: some View {
+        
+        HStack(alignment: .top) {
+            NepaliDigitalClock()
+                .frame(width: 150, height: 80)
+            
+                .overlay {
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(.secondary.opacity(0.3), lineWidth: 1)
+                    
+                }
+                .padding(.top)
+                .padding(.bottom)
+            
+            VStack(alignment: .leading) {
+                Text("आज")
+                    .font(.headline.bold())
+                    .padding(.top, 10)
+                    .cornerRadius(10)
+                    .foregroundColor(.primary.opacity(0.7))
+                
+                Text(toBSString(bs: Today.date))
+                    .font(.title2.bold())
+                    .cornerRadius(10)
+                    .foregroundColor(.primary.opacity(0.7))
+                
+                Text(BSCalendar.toADString(Today.ADDate))
+                    .font(.headline.bold())
+                    .cornerRadius(10)
+                    .foregroundColor(.primary.opacity(0.7))
+                
+            }
+
+        }
+    }
+}
+
+//#Preview {
+//    AajaView(bsDate: Constant.dummyBS)
+//}
+
+
+
 
 struct CalendarTabContentView: View {
 
@@ -65,16 +111,8 @@ struct CalendarTabContentView: View {
     
     var body: some View {
         VStack {
-            NepaliDigitalClock()
-                .frame(width: 150, height: 80)
-            
-                .overlay {
-                    RoundedRectangle(cornerRadius: 4)
-                        .stroke(.secondary.opacity(0.3), lineWidth: 1)
-                    
-                }
-                .padding(.top)
-                .padding(.bottom)
+            AajaView()
+                .padding(20)
             
             if (userSelectedDay != nil) {
                 BSCalendarHeaderView(
@@ -152,7 +190,6 @@ struct ClockPreviewContainer: View {
 #Preview {
     ClockPreviewContainer()
 }
-
 struct NepaliAnalogClock: View {
     @State private var now = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -169,40 +206,39 @@ struct NepaliAnalogClock: View {
             let center = CGPoint(x: proxy.size.width / 2, y: proxy.size.height / 2)
 
             ZStack {
-                // Face
+                // Clock face
                 Circle()
-                    .fill(Color.white)
+                    .fill(Color(.systemBackground))   // adapts to light/dark
                     .shadow(radius: 4)
-                Circle()
-                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
 
-                // Hour marks (12)
+                Circle()
+                    .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+
+                // Hour marks (12 ticks)
                 ForEach(0..<12) { tick in
                     Rectangle()
                         .fill(Color.primary)
-                        .frame(width: 2, height: size * 0.06)
+                        .frame(width: 2, height: size * 0.04)
                         .offset(y: -size/2 + (size * 0.06)/2)
                         .rotationEffect(.degrees(Double(tick) * 30))
                 }
 
-                // Hands
+                // Time components
                 let comps = calendar.dateComponents(in: tz, from: now)
                 let h = comps.hour ?? 0
                 let m = comps.minute ?? 0
                 let s = comps.second ?? 0
 
                 // Hour hand
-                Hand(length: size * 0.22, thickness: 6)
+                Hand(length: size * 0.22, thickness: 6, foregroundColor: .primary)
                     .rotationEffect(.degrees(Double(h % 12) * 30 + Double(m) * 0.5))
-                    .offset(x: 0, y: 0)
 
                 // Minute hand
-                Hand(length: size * 0.32, thickness: 4)
+                Hand(length: size * 0.32, thickness: 4, foregroundColor: .primary)
                     .rotationEffect(.degrees(Double(m) * 6 + Double(s) * 0.1))
 
                 // Second hand
-                Hand(length: size * 0.38, thickness: 1.5)
-                    .foregroundColor(.red)
+                Hand(length: size * 0.38, thickness: 1.5, foregroundColor: .red)
                     .rotationEffect(.degrees(Double(s) * 6))
 
                 // Center cap
@@ -210,7 +246,7 @@ struct NepaliAnalogClock: View {
                     .fill(Color.primary)
                     .frame(width: 10, height: 10)
 
-                // Nepali numerals around face (1..12)
+                // Nepali numerals
                 ForEach(1...12, id: \.self) { num in
                     let angle = Double(num) * 30 - 90
                     let radius = size * 0.42
@@ -218,6 +254,7 @@ struct NepaliAnalogClock: View {
                     let y = center.y + CGFloat(sin(angle * .pi / 180)) * radius
                     Text(toNepaliDigits(num))
                         .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.primary)
                         .position(x: x, y: y)
                 }
             }
@@ -229,10 +266,11 @@ struct NepaliAnalogClock: View {
     }
 }
 
+// MARK: - Clock Hand
 struct Hand: View {
     var length: CGFloat
     var thickness: CGFloat
-    var foregroundColor: Color = .primary
+    var foregroundColor: Color
 
     var body: some View {
         Rectangle()
@@ -343,7 +381,7 @@ struct ClockTabContentView: View {
         NepaliAnalogClock()
             .frame(width: 220, height: 220)
             .padding(.bottom, 40)
-        NepaliDigitalClock()
+            AajaView()
         }
         .padding()
     }

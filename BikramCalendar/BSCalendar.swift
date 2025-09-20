@@ -173,6 +173,14 @@ class BSCalendar {
         let wd = (bs.monthStartWeekday + day - 1) % 7
         return "\(toNepaliDigits(day)) \(bsMonths[bs.month-1]) \(toNepaliDigits(bs.year)) \(nepaliWeekdays[wd])"
     }
+    
+    static func toADString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM dd, yyyy"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.string(from: date).uppercased()
+    }
+
 
 }
 

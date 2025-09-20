@@ -120,9 +120,6 @@ extension BSDate {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(identifier: "Asia/Kathmandu")!
         let components = calendar.dateComponents([.month, .day], from: date)
-        if components.month == 5 && components.day == 1 {
-            print("Sujeet \(self) component is \(components)")
-        }
         return components.month == 5 && components.day == 1
     }
     
@@ -153,7 +150,7 @@ extension BSDate {
         case internationalDayOfYoga = "अन्तर्राष्ट्रिय योग दिवस"
         case worldPopulationDay = "विश्व जनसंख्या दिवस"
         case internationalYouthDay = "अन्तर्राष्ट्रिय युवा दिवस"
-        case internationalDayOfPeace = "अन्तर्राष्ट्रिय शान्ति दिवस"
+        case internationalDayOfPeace = "शान्ति दिवस"
         case worldTourismDay = "विश्व पर्यटन दिवस"
         case worldTeachersDay = "विश्व शिक्षक दिवस"
         case unitedNationsDay = "संयुक्त राष्ट्र दिवस"

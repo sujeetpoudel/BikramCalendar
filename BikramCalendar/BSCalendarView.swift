@@ -38,7 +38,6 @@ struct BSCalendarView: View {
         (1...bsDate.monthLength).compactMap { day -> (Int, String)? in
             let date = bsDate.withChangedDay(day)
             if let event = date.event {
-                print(day, event.rawValue)
                 return (day, event.rawValue)
             }
             return nil
@@ -126,7 +125,8 @@ struct BSCalendarView: View {
 
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
                         ForEach(combinedItems, id: \.day) { item in
-                            Text("\(BSCalendar.toNepaliDigits(item.day)) – \(item.name)")
+                            let dot = item.day == bsDate.day ? "•" : ""
+                            Text("\(BSCalendar.toNepaliDigits(item.day)) – \(item.name) \(dot)")
                                 .foregroundColor(item.isHoliday ? .red : .primary.opacity(0.7))
                         }
                     }
