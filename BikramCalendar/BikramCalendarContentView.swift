@@ -394,10 +394,3 @@ struct NepaliDigitalClock: View {
         .padding(8)
     }
 }
-
-struct SettingsView: View {
-    var body: some View {
-        Text("⚙️ Settings Screen")
-            .font(.largeTitle)
-    }
-}
