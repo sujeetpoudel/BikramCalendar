@@ -173,7 +173,7 @@ struct ADDatePicker: View {
     ContentView()
 }
 
-#Preview {
-    @Previewable @State var bsDate: BSDate = Constant.dummyBS
-    BSDatePicker(bsDate: $bsDate, userSelectedDay: .constant(1))
-}
+//#Preview {
+//    @Previewable @State var bsDate: BSDate = Constant.dummyBS
+//    BSDatePicker(bsDate: $bsDate, userSelectedDay: .constant(1))
+//}

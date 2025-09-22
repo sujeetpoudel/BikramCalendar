@@ -67,7 +67,7 @@ struct AajaView: View {
                     .cornerRadius(10)
                     .foregroundColor(.primary.opacity(0.7))
                 
-                Text(BSCalendar.toADString(Today.ADDate))
+                Text(PanchangaCalculator.getTithi(for: Today.ADDate))
                     .font(.headline.bold())
                     .cornerRadius(10)
                     .foregroundColor(.primary.opacity(0.7))
