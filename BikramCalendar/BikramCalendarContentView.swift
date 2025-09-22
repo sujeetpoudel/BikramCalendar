@@ -16,7 +16,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            ClockTabContentView()
+            TodayTabContentView()
                 .tabItem {
                     Label("आज", systemImage: "clock.fill") // Clock → आज
                 }
@@ -39,11 +39,12 @@ struct ContentView: View {
 
 struct AajaView: View {
     
+    @Binding var bsDate: BSDate
     
     var body: some View {
         
         HStack(alignment: .top) {
-            NepaliDigitalClock()
+            NepaliDigitalClock(bsDate: $bsDate)
                 .frame(width: 150, height: 80)
             
                 .overlay {
@@ -90,9 +91,12 @@ struct CalendarTabContentView: View {
         didSet {
             // works when left, right chevron, and आज tapped
             if userSelectedDay == nil {
-                userSelectedDay = bsDate.day
+                if bsDate.month != Today.date.month {
+                    userSelectedDay = Today.date.day
+                }
             }
             
+            // For selecting 31st day and then exploring with month < 31 days
             if (userSelectedDay != nil) && bsDate.monthLength < userSelectedDay! {
                 userSelectedDay = bsDate.monthLength
             }
@@ -111,7 +115,7 @@ struct CalendarTabContentView: View {
     
     var body: some View {
         VStack {
-            AajaView()
+            AajaView(bsDate: $bsDate)
                 .padding(20)
             
             if (userSelectedDay != nil) {
@@ -123,7 +127,7 @@ struct CalendarTabContentView: View {
                 )
             } else {
                 BSCalendarHeaderView(
-                    bsDate: BSDate(year: bsDate.year, month: bsDate.month, day: Today.date.day, weekday: 0, monthStartWeekday: 0, monthLength: 0),
+                    bsDate: bsDate,
                     showDatePickerPopup: $showDatePickerPopup,
                     changeMonth: changeMonth,
                     todayTapped: todayTapped
@@ -163,12 +167,14 @@ struct CalendarTabContentView: View {
             nm = 1
         }
         self.bsDate = BSCalendar.toFullBS(from: BSDate(year: ny, month: nm, day: 1, weekday: 0, monthStartWeekday: 0, monthLength: 0))
+        Today.date = BSCalendar.toBS(from: Today.ADDate)
     }
     
     private func todayTapped() {
         BSCalendarView.todayDayNumber = -1
         userSelectedDay = nil
         bsDate = BSCalendar.toBS(from: Today.ADDate)
+        Today.date = bsDate
     }
 }
 
@@ -179,7 +185,7 @@ struct CalendarTabContentView: View {
 struct ClockPreviewContainer: View {
     var body: some View {
         VStack(spacing: 24) {
-            NepaliDigitalClock()
+            NepaliDigitalClock(bsDate: .constant(Constant.dummyBS))
             NepaliAnalogClock()
                 .frame(width: 220, height: 220)
         }
@@ -310,6 +316,7 @@ fileprivate func nepaliAMPM(_ hour: Int) -> String {
 }
 
 struct NepaliDigitalClock: View {
+    @Binding var bsDate: BSDate
     @State private var now = Date()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private let tz = TimeZone(identifier: "Asia/Kathmandu") ?? .current
@@ -318,6 +325,12 @@ struct NepaliDigitalClock: View {
         cal.locale = Locale(identifier: "ne_NP")
         return cal
     }()
+    
+    @State var dayEpoch = BSCalendar.daysElapsedSinceEpoch
+    
+    init(bsDate: Binding<BSDate>) {
+        _bsDate = bsDate
+    }
 
     var body: some View {
         let components = calendar.dateComponents(in: tz, from: now)
@@ -369,21 +382,16 @@ struct NepaliDigitalClock: View {
                     .foregroundColor(.secondary)
             }
         }
-        .onReceive(timer) { now = $0 }
-        .padding(8)
-    }
-}
-
-
-struct ClockTabContentView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-        NepaliAnalogClock()
-            .frame(width: 220, height: 220)
-            .padding(.bottom, 40)
-            AajaView()
+        .onReceive(timer) { now = $0
+            if dayEpoch != BSCalendar.daysElapsedSinceEpoch,
+               bsDate.month == Today.date.month && bsDate.year == Today.date.year && bsDate.day == Today.date.day {
+                dayEpoch = BSCalendar.daysElapsedSinceEpoch
+                bsDate = BSCalendar.toBS(from: Today.ADDate)
+                Today.date = BSCalendar.toBS(from: Today.ADDate)
+            }
+            _ = BSCalendar.toBS(from: Today.ADDate)
         }
-        .padding()
+        .padding(8)
     }
 }
 

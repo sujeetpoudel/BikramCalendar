@@ -65,7 +65,7 @@ struct BSCalendarView: View {
                     
                     if dayNumber >= 1 && dayNumber <= bsDate.monthLength {
                         Button {
-                            userSelectedDay = dayNumber
+                            userSelectedDay = dayNumber == bsDate.day ? nil : dayNumber
                             UserSelectedDate.date = bsDate.withChangedDay(dayNumber)
                         } label: {
                             ZStack(alignment: .bottomTrailing) {
@@ -78,8 +78,7 @@ struct BSCalendarView: View {
                                             if hasTodayHighlight && dayNumber == Today.date.day {
                                                 Circle()
                                                     .fill(Color.blue.opacity(0.3))
-                                            } else if dayNumber == userSelectedDay ||
-                                                        (!hasTodayHighlight && userSelectedDay == nil && dayNumber == Today.date.day) {
+                                            } else if dayNumber == userSelectedDay {
                                                 Rectangle()
                                                     .stroke(.gray.opacity(0.4), lineWidth: 4)
                                                     .cornerRadius(4)

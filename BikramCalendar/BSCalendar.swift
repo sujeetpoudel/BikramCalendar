@@ -36,6 +36,7 @@ class BSCalendar {
 
     private static let msPerDay: Int64 = 86_400_000
     private static let bsYearZero = 2000 // 2000 BS
+    static var daysElapsedSinceEpoch = 0
 
     // Reference epoch: 14 April 1943 = 1 Baisakh 2000 BS
     static let bsEpoch: Int64 = {
@@ -122,7 +123,10 @@ class BSCalendar {
         let hours = Int(leftoverMs / (1000 * 60 * 60))
         let minutes = Int((leftoverMs / (1000 * 60)).truncatingRemainder(dividingBy: 60))
         let seconds = Int((leftoverMs / 1000).truncatingRemainder(dividingBy: 60))
+        
+        BSCalendar.daysElapsedSinceEpoch = days
         print("\(days) days, \(hours)h \(minutes)m \(seconds)s since 2000/01/01 BS")
+        
         var diff = daysSinceEpoch
         var bsYear = bsYearZero // 2000 BS
         
@@ -175,17 +179,30 @@ class BSCalendar {
     }
     
     static func toADString(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM dd, yyyy"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        return formatter.string(from: date).uppercased()
+        let tz = TimeZone(identifier: "Asia/Kathmandu")!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = tz
+        calendar.locale = Locale(identifier: "en_US_POSIX") // force English month names
+
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+
+        guard let year = components.year,
+              let month = components.month,
+              let day = components.day else {
+            return ""
+        }
+
+        // Always English month names
+        let monthName = DateFormatter().monthSymbols[month - 1]
+
+        return "\(monthName.uppercased()) \(String(format: "%02d", day)), \(year)"
     }
 
 
 }
 
 #Preview {
-    CalendarTabContentView()
+    ContentView()
 }
 
 extension BSCalendar {
@@ -212,3 +229,4 @@ extension BSCalendar {
         return calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .weekday], from: adDate)
     }
 }
+
